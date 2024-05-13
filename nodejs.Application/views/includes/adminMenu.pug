@@ -1,0 +1,35 @@
+nav.navbar.navbar-expand-lg.navbar-dark.fixed-top.navbarc
+            a(href="/admin/dashboard").navbar-brand AdminPanel
+
+
+            ul.navbar-nav.ml-auto
+
+                if isAuthenticated
+                    li.nav-item
+                        a(href="/logout").nav-link Logout
+       
+#sidebar
+    ul.nav.navbar-nav.side-bar
+        li.side-bar.tmargin
+            a(href="/")  Web Sitem
+                
+        li.side-bar
+            a(href="/admin/products")  Ürünler
+        
+
+        li.side-bar
+            a(href="/admin/categories") Kategoriler
+
+            
+        li.side-bar
+            a(href="#") Müşteriler
+
+        li.side-bar
+            a(href="#") Siparişler
+
+                | 
+        li.side-bar
+            a(href="/admin/blogs") Blog
+
+        li.side-bar
+            a(href="/admin/gallery") Galeri

@@ -1,0 +1,24 @@
+extends ../layouts/main-layout.pug
+
+block content
+    .container.blog-detail-container
+        .project-detail-inside
+            .project-detail-inside-left(style="width:70%")
+                p.project-detail-title.mt-0 #{blog.title}
+                .project-detail-inside-left-img
+                    img(src=`/img/${blog.image}`).project-detail-img
+                p.blog-detail-desc #{blog.description}
+            .project-detail-inside-right
+                .project-detail-right-title-div
+                    .project-detail-right-title İLGİLİ YAZILAR 
+                .project-detail-right-card-main
+                    each relatedblog in relatedThreeBlogs
+                        .project-detail-right-card
+                            .project-detail-right-card-img
+                                a(href=`/blog/${relatedblog.id}`) 
+                                    img(src=`/img/${relatedblog.image}`).project-detail-right-card-img-main
+                            .project-detail-right-card-info.d-flex.flex-column
+                                div 
+                                    a(href=`/blog/${relatedblog.id}`).project-detail-right-card-desc #{relatedblog.title}
+                                div 
+                                    p #{moment(relatedblog.createdAt).format('DD-MM-YYYY')}

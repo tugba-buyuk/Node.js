@@ -1,0 +1,20 @@
+extends ../layouts/admin-layout.pug
+
+block content 
+    form(action="/admin/add-category" method="POST").d-flex.flex-column
+        input(type='hidden' name='_csrf' value=`${csrfToken}`)
+        .form-group.d-flex.flex-row
+            label(for="name").col-sm-2.col-form-label Name
+            .col-sm-5.pr-0
+                input(type="text" id="name" name="name").form-control
+        
+        .form-group.d-flex.flex-row
+            label(for="description").col-sm-2.col-form-label Description
+            .col-sm-5.pr-0
+                input(type="text" id="description" name="description").form-control
+
+        .form-group.d-flex.flex-row
+            .col-sm-5.offset-sm-2 
+                input(type="submit" value="Add New Category").btn.btn-primary
+
+

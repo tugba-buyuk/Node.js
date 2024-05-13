@@ -1,0 +1,26 @@
+//- extends ../layouts/admin-layout.pug
+
+block styles 
+    link(rel="stylesheet" href="/css/adminlogin.css")
+
+
+block content 
+    .login-box
+        h2 Login
+        form(action="/admin/login" method="POST")
+            input(type='hidden' name='_csrf' value=`${csrfToken}`)
+            .user-box
+                input(type='text', name='email', required='')
+                label Email
+            .user-box
+                input(type='password', name='password', required='')
+                label Password
+                input(type="submit" value="Login").submitbtn
+                span
+                span
+                span
+                span
+            
+
+
+                
