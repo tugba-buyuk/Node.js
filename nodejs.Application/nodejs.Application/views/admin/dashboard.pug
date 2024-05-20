@@ -1,0 +1,49 @@
+extends ../layouts/admin-layout.pug
+
+block content 
+    
+        .card-body
+            .card-title
+                h4 Merhaba, Default Default
+            hr
+            .documentation-text Aşağıdaki alanlardan günlük, aylık ve yıllık olarak toplam sipariş, başarılı sipariş, başarısız sipariş ve yarım kalan siparişlerin sayılarını inceleyebilirsiniz. Yandaki butonlardan da web sitesinin genel yapısını kontrol eden alanlarda düzenleme, ekleme, çıkarma ve aktifliğini değiştirme işlemlerinizi gerçekleştirebilirsiniz.
+            hr.my-4
+            .container-fluid
+                .row.month-area
+                    .col-12
+                        h4.mb-3.font-weight-bold.mt-2 Günlük İstatistikler
+            .row.mt-4.order-boxes
+
+                    .col-lg-3
+                        .card.radius-15.bg-danger
+                            .card-body.text-center
+                                .widgets-icons.mx-auto.bg-white.rounded-circle
+                                    i.bx.bx-money
+                                h4.mb-0.font-weight-bold.mt-3.text-white 0
+                                p.mb-0.text-white Bugün Toplam Sipariş
+
+                    .col-lg-3
+                        .card.radius-15.bg-danger
+                            .card-body.text-center
+                                .widgets-icons.mx-auto.bg-white.rounded-circle
+                                    i.bx.bx-money
+                                h4.mb-0.font-weight-bold.mt-3.text-white 0
+                                p.mb-0.text-white Bugün Toplam Kazanç
+                    .col-lg-3
+                        .card.radius-15.bg-danger
+                            .card-body.text-center
+                                .widgets-icons.mx-auto.bg-white.rounded-circle
+                                    i.bx.bx-money
+                                h4.mb-0.font-weight-bold.mt-3.text-white 0
+                                p.mb-0.text-white Toplam Müşteri Sayısı
+
+                    .col-lg-3
+                        .card.radius-15.bg-danger
+                            .card-body.text-center
+                                .widgets-icons.mx-auto.bg-white.rounded-circle
+                                    i.bx.bx-money
+                                h4.mb-0.font-weight-bold.mt-3.text-white 0
+                                p.mb-0.text-white Bugün Toplam Ürün Sayısı
+            hr.my-4
+            
+                

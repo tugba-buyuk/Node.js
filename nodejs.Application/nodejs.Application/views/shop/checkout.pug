@@ -1,0 +1,53 @@
+extends ../layouts/main-layout.pug
+
+block content
+    .address-form-container
+        label.form-title Teslimat Adresi
+
+        .form-group-box
+            form.form-box#payment_form(action='/checkout' method='POST')
+
+                    
+                .form-group-container
+                    input(type='hidden' name='_csrf' value=`${csrfToken}`)
+                    label.input-title Ad*
+                    input.form-input(type='text' id='OrderName' name='OrderName')
+
+                .form-group-container
+                    label.input-title Ülke*
+                    select.form-group.form-select.select-display(name='OrderCountryId' id='OrderCountryId')
+                        option(value='' selected='') Lütfen Seçiniz
+                        option(value='228') Türkiye
+
+                .form-group-container
+                    label.input-title Soyadı*
+                    input.form-input(type='text' id='OrderSurname' name='OrderSurname')
+
+                .form-group-container
+                    label.input-title Şehir*
+                    select.form-group.form-select(name='OrderCityId' id='OrderCityId')
+                        option(value='' selected='') Lütfen Seçiniz
+                        each city in cities 
+                            option(value=`${city.name}`) #{city.name}
+
+                .form-group-container
+                    label.input-title Telefon*
+                    input.form-input(type='tel' id='OrderPhone' name='OrderPhone')
+
+                .form-group-container
+                    label.input-title İlçe*
+                    input.form-input(type='distriict' id='OrderDistrict' name='OrderDistrict')
+
+                .form-group-container
+                    label.input-title Email*
+                    input.form-input(type='email' id='OrderEmail' name='OrderEmail')
+
+                .form-group-container
+                    label.input-title Adres*
+                    textarea.form-input(rows='1' cols='1' id='OrderAddress' name='OrderAddress' placeholder='Adresiniz')
+
+
+
+                div(style='display: flex;align-items: center;justify-content: center;').mt-3
+                      
+                        button(type="submit").btn.btn-primary.ml-2 Alışverişi Tamamla

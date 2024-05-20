@@ -1,0 +1,17 @@
+mixin createProduct(product)
+    .col-6.col-lg-3.mb-4.mb-sm-9
+        .product-item
+            .product-thumb
+                .product-img-container
+                    a
+                        img(src=`/img/${product.image}` alt=`${product.description}`).card-img-top
+                    .card-body
+                        h4.card-title
+                            a(href=`/product/${product.id}`) #{product.name}
+                        p.card-text.pt-2 #{product.price}
+                    .card-footer.d-flex.justify-content-between  
+                        a(href=`/product/${product.id}`).btn.btn-outline-primary.btn-sm Details
+                        form(action='/cart' method='POST')
+                            input(type='hidden' name='_csrf' value=`${csrfToken}`)
+                            input(type='hidden' name='productId' value=`${product.id}`)
+                            button(type='submit').btn.btn-outline-primary.btn-sm Add to Cart

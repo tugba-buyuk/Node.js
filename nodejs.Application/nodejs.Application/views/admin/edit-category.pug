@@ -1,0 +1,19 @@
+extends ../layouts/admin-layout.pug
+
+block content 
+    form(action="/admin/edit-category" method="POST").d-flex.flex-column
+
+        input(type='hidden' name='_csrf' value=`${csrfToken}`)
+        input(type='hidden' value=`${category.id}` name='id')
+        .form-group.d-flex.flex-row
+            label(for="name").col-sm-2.col-form-label Name
+            .col-sm-5
+                input(type="text" id="name" name="name" value=`${category.name}`).form-control
+        .form-group.d-flex.flex-row
+            label(for="description").col-sm-2.col-form-label Description
+            .col-sm-5
+                input(type="text" id="description" name="description" value=`${category.description}`).form-control
+
+        .form-group.d-flex.flex-row
+            .col-sm-5.offset-sm-2 
+                input(type="submit" value="Save").btn.btn-primary
