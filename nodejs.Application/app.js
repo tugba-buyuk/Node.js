@@ -32,6 +32,9 @@ const Cart=require('./models/cart');
 const CartItem=require('./models/cartitem');
 const Order=require('./models/order');
 const OrderItem=require('./models/orderitem');
+const OrderInfo=require('./models/orderInfo');
+const City=require('./models/city');
+
 
 
 
@@ -116,6 +119,7 @@ Product.belongsToMany(Order,{through:OrderItem});
 
 
 
+
 let _user;
 sequelize
 // .sync({force:true})
@@ -145,7 +149,8 @@ sequelize
                     })
             });
         });
-}).catch((err)=>{
+})
+.catch((err)=>{
     console.log(err);
 });
 

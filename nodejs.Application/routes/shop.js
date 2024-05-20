@@ -21,9 +21,19 @@ router.post('/cart',locals,shopController.postCart);
 
 router.post('/delete-cartitem',locals,shopController.postCartItemDelete);
 
-router.get('/orders',locals,isAuthenticated,shopController.getOrders);
 
-router.post('/create-order',locals,shopController.postOrder);
+
+// router.post('/create-order',locals,shopController.postOrder);
+
+router.get('/checkout',locals,isAuthenticated,shopController.getCheckout);
+
+router.post('/checkout',locals,isAuthenticated,shopController.postCheckout);
+
+router.get('/payment',locals,isAuthenticated,shopController.getPayment);
+
+router.post('/payment',locals,isAuthenticated,shopController.postPayment);
+
+router.get('/payment-success',shopController.getPaymentSuccess);
 
 router.get('/blogs',shopController.getBlogs);
 

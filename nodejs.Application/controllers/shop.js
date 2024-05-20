@@ -3,25 +3,37 @@ const Category=require('../models/category');
 const Blog=require('../models/blog');
 const Gallery=require('../models/gallery');
 const { Op } = require('sequelize');
+const City = require('../models/city');
+const stripe = require('stripe')('sk_test_51PGQYHP6uMYivj2gm0vygeGHdeL3MRrsVYC0WREGFQ0x2BzjITfSszizRIqbL5vi9xEjTHEBGmVNC4id9Mu2gqSQ00sK6VVQ84');
+// const elements = stripe.elements();
+const OrderInfo=require('../models/orderInfo');
+const Order=require('../models/order');
+const { where } = require('underscore');
+const Sequelize=require('sequelize');
 
-exports.getIndex=(req,res)=> {
-    Product.findAll().then((products)=>{
-        Category.findAll().then((categories)=>{
-            res.render('shop/index',
-                {
-                    title:'Home Page',
-                    products:products,
-                    categories:categories,
-                    path:'/',
-                    // isAuthenticated:req.session.isAuthenticated,
-                    // isAdmin:req.user.isAdmin
-                });
-        }).catch((err)=>{
-            console.log(err);
-        })
-    }).catch((err)=>{
-        console.log(err);
-    })
+exports.getIndex = async (req, res) => {
+    try {
+        // Random 4 blog al
+        const blogs = await Blog.findAll({ order: Sequelize.literal('RAND()'), limit: 4 });
+        
+        // Diğer veritabanı sorgularını asenkron olarak çalıştır
+        const products = await Product.findAll();
+        const categories = await Category.findAll();
+
+        // Render işlemi
+        res.render('shop/index', {
+            title: 'Home Page',
+            blogs: blogs,
+            products: products,
+            categories: categories,
+            path: '/',
+            // isAuthenticated: req.session.isAuthenticated,
+            // isAdmin: req.user.isAdmin
+        });
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 }
 exports.getProducts=(req,res)=> {
     Category.findAll().then((categories)=>{
@@ -182,61 +194,6 @@ exports.postCartItemDelete=(req,res,next)=>{
 }
 
 
-exports.getOrders=(req,res)=> {
-
-    req.user
-        .getOrders({include:['products']})
-        .then(orders=>{
-            console.log("siparişler:",orders);
-            res.render('shop/orders',
-            {
-                title:'Orders',
-                path:'/orders',
-                orders:orders,
-                // isAuthenticated:req.session.isAuthenticated,
-                // isAdmin:req.user.isAdmin
-            });
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-}
-
-exports.postOrder = (req, res, next) => {
-    let userCart;
-    req.user
-        .getCart()
-        .then(cart => {
-            userCart = cart;
-            return cart.getProducts();
-        })
-        .then(products => {
-            return req.user.createOrder()
-                .then(order => {
-                    order.addProducts(products.map(product => {
-                        product.orderItem = {
-                            quantity: product.cartItem.quantity,
-                            price: product.price
-                        }
-                        return product;
-                    }));
-                })
-                .catch(err => { console.log(err); });
-        })
-        .then(() => {
-            userCart.setProducts(null);
-        })
-        .then(() => {
-            res.redirect('/orders');
-        })
-        .catch(err => {
-            console.log(err);
-        });
-}
-
-
-
-
 exports.getBlogs= async (req,res)=> {
     try {
         const blogs = await Blog.findAll();
@@ -299,3 +256,152 @@ exports.getGallery=async (req,res,next)=>{
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+exports.getCheckout = async (req, res, next) => {
+    try {
+        const cities = await City.findAll();
+        res.render('shop/checkout', {
+            title: 'Checkout',
+            path: '/checkout',
+            cities: cities
+        });
+    } catch (err) {
+        console.error("Hata oluştu:", err);
+    }
+}
+
+
+
+
+exports.getPayment=(req,res,next)=>{
+    res.render('shop/payment',{
+        title:'Payment',
+        path:'/payment'
+    })
+
+}
+
+
+exports.postCheckout=(req,res,next)=>{
+
+
+    console.log("GELDİİİİİİİİİİ");
+    const orderUserName=req.body.OrderName;
+    const orderUserSurname=req.body.OrderSurname;
+    const orderUserEmail=req.body.OrderEmail;
+    const orderUserPhone=req.body.OrderPhone;
+    const orderUserCity=req.body.OrderCityId;
+    const orderUserDistrict=req.body.OrderDistrict;
+    const orderUserFullAdress=req.body.OrderAddress;
+
+    console.log("REEEEQQQ BODYYY",req.body);
+
+    OrderInfo.create({
+        orderUserName:orderUserName,
+        orderUserSurname:orderUserSurname,
+        orderUserEmail:orderUserEmail,
+        orderUserPhone:orderUserPhone,
+        orderUserCity:orderUserCity,
+        orderUserDistrict:orderUserDistrict,
+        orderUserFullAdress:orderUserFullAdress
+    }).then(()=>{
+        res.redirect('/payment')
+    }).catch(err=>{
+        console.log(err);
+    })
+}
+
+
+
+exports.postPayment = async (req, res, next) => {
+    try {
+        const { description } = req.body;
+
+        // Stripe API'si kullanarak ödeme işlemini gerçekleştir
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: 1500,
+            currency: 'USD',
+            description: description,
+            payment_method_types: ['card'], // Kullanılacak ödeme yöntemi
+            payment_method: 'pm_card_visa', // Test kartı
+            confirm: true,
+            return_url: 'http://localhost:3000/payment/success'
+        });
+
+        // Ödeme başarılı olduğunda postOrder fonksiyonunu çağır
+        try {
+            let userCart;
+            const cart = await req.user.getCart();
+            userCart = cart;
+            const products = await cart.getProducts();
+            
+            const order = await req.user.createOrder();
+            await order.addProducts(products.map(product => {
+                product.orderItem = {
+                    quantity: product.cartItem.quantity,
+                    price: product.price
+                }
+                return product;
+            }));
+    
+            await userCart.setProducts(null);
+            const orderIdNumber = order.id;
+
+            // findAll metodu bir Promise döndürdüğü için then fonksiyonunu kullanabilirsiniz
+            OrderInfo.findAll().then(infos => {
+                const lastOrder = infos[infos.length - 1];
+                // lastOrder.set('orderIdNumber', String(orderIdNumber));
+                lastOrder.update({ orderIdNumber: String(orderIdNumber) }).then(() => {
+                    res.redirect('/payment-success');
+                }).catch(err => {
+                    console.error("orderIdNumber güncellenirken bir hata oluştu:", err);
+                });
+            });
+               
+        } catch (err) {
+            console.log(err);
+        }
+        
+    } catch (error) {
+        // Hata durumunda hatayı konsola yaz ve kullanıcıya geri dön
+        console.error(error);
+        res.status(500).render('shop/payment-error', {
+            title: 'Payment Error',
+            path: '/payment/error',
+            error: 'Ödeme işlemi sırasında bir hata oluştu.'
+        });
+    }
+};
+
+exports.getPaymentSuccess=(req,res,next)=>{
+    res.render('shop/payment-success',{
+        title:'Payment Success',
+        path:'/payment-success'
+    })
+}
+
+
+// exports.postOrder = async (req, res, next) => {
+//     try {
+//         let userCart;
+//         const cart = await req.user.getCart();
+//         userCart = cart;
+//         const products = await cart.getProducts();
+        
+//         const order = await req.user.createOrder();
+//         await order.addProducts(products.map(product => {
+//             product.orderItem = {
+//                 quantity: product.cartItem.quantity,
+//                 price: product.price
+//             }
+//             return product;
+//         }));
+
+//         await userCart.setProducts(null);
+        
+//         // postCheckout metodunu çağırarak yönlendirme yapılıyor
+//         await postCheckout(req, res, next);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }

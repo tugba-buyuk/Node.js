@@ -36,9 +36,10 @@ block content
 
             .text-center
                 a(href="/").btn.btn-primary Alışverişe Devam Et
-                form(action='/create-order' method='POST')
-                    input(type='hidden' name='_csrf' value=`${csrfToken}`)
-                    button(type="submit").btn.btn-primary.ml-2 Alışverişi Tamamla
+                //- form(action='/create-order' method='POST')
+                //-     input(type='hidden' name='_csrf' value=`${csrfToken}`)
+                //-     button(type="submit").btn.btn-primary.ml-2 Alışverişi Tamamla
+                a(href="/checkout").btn.btn-primary Alışverişi Tamamla
 
         
         else 

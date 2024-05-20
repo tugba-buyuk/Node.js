@@ -23,6 +23,7 @@
     "nodemailer": "^6.9.13",
     "pug": "^3.0.2",
     "sequelize": "^6.37.3",
+    "stripe": "^15.6.0",
     "underscore": "^1.13.6"
   }
 }

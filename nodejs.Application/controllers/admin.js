@@ -6,6 +6,8 @@ const Blog=require('../models/blog');
 const Gallery=require('../models/gallery');
 const fs=require('fs');
 const bcrypt=require('bcrypt')
+const OrderInfo=require('../models/orderInfo');
+const Order=require('../models/order');
 
 exports.getProducts=(req,res)=> {
     Product.findAll()
@@ -186,7 +188,7 @@ exports.postAdminLogin = (req, res, next) => {
                             res.redirect(url);
                         });
                     }
-                    res.redirect('/login');
+                    res.redirect('admin/login');
                 })
                 .catch(err => {
                     console.log(err);
@@ -444,4 +446,50 @@ exports.postAddGallery=(req,res,next)=>{
         console.log(err);
     });
 
+}
+exports.getOrders=(req,res)=> {
+
+    req.user
+        .getOrders({include:['products']})
+        .then(orders=>{
+            res.render('admin/orders',
+            {
+                title:'Orders',
+                path:'admin/orders',
+                orders:orders,
+                // isAuthenticated:req.session.isAuthenticated,
+                // isAdmin:req.user.isAdmin
+            });
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+}
+
+exports.getOrder = async (req, res, next) => {
+    const orderId = req.params.orderid;
+
+    try {
+        const order = await Order.findByPk(orderId, { include: 'products' }); // Include products when fetching order
+
+        if (!order) {
+            throw new Error('Order not found');
+        }
+
+        const info = await OrderInfo.findOne({ where: { orderIdNumber: orderId } });
+
+        if (!info) {
+            throw new Error('Order info not found');
+        }
+
+        res.render('admin/order-detail', {
+            title: "Order Detail",
+            path: 'admin/order-detail',
+            order: order,
+            info: info
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('An error occurred');
+    }
 }

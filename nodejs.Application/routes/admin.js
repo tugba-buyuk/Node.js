@@ -52,6 +52,10 @@ const locals=require('../middlewares/locals');
  router.get('/add-gallery',locals,isAdmin,adminController.getAddGallery);
 
  router.post('/add-gallery',locals,adminController.postAddGallery);
+
+ router.get('/orders',locals,adminController.getOrders);
+
+router.get('/order/:orderid',adminController.getOrder);
  
 
  
