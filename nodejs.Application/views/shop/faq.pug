@@ -1,0 +1,14 @@
+extends ../layouts/main-layout.pug
+
+block content 
+    .container(style="padding-top:100px")
+        .faq-header Sıkça Sorulan Sorular
+        .faq-content
+            each faq in faqs
+                .faq-question
+                    input.panel(type="checkbox" id=`q${faq.id}`)
+                    .plus +
+                    label(for=`q${faq.id}`).panel-title #{faq.question}
+                    .panel-content #{faq.answer}
+                
+

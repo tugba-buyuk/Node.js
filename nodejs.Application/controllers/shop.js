@@ -8,6 +8,7 @@ const stripe = require('stripe')('sk_test_51PGQYHP6uMYivj2gm0vygeGHdeL3MRrsVYC0W
 // const elements = stripe.elements();
 const OrderInfo=require('../models/orderInfo');
 const Order=require('../models/order');
+const FAQ=require('../models/faq');
 const { where } = require('underscore');
 const Sequelize=require('sequelize');
 
@@ -19,6 +20,11 @@ exports.getIndex = async (req, res) => {
         // Diğer veritabanı sorgularını asenkron olarak çalıştır
         const products = await Product.findAll();
         const categories = await Category.findAll();
+
+        console.log("kategoriiiiii",categories);
+        categories.forEach(category => {
+            console.log(category.name);
+        });
 
         // Render işlemi
         res.render('shop/index', {
@@ -58,30 +64,32 @@ exports.getProducts=(req,res)=> {
 
 }
 
-exports.getProductsByCategoryId=(req,res)=> {
-    const categoryid=req.params.categoryid;
-    const model=[];
+exports.getProductsByCategoryId = (req, res) => {
+    const categoryid = req.params.categoryid;
+    const model = {};
 
     Category.findAll()
-        .then(categories=>{
-            model.categories=categories;
-            const category=categories.find(i=>i.id==categoryid);
+        .then(categories => {
+            model.categories = categories;
+            const category = categories.find(i => i.id == categoryid);
+            model.selectedcategoryname = category.name; // Seçilen kategorinin adını model'e ekleyin
             return category.getProducts();
         })
-        .then(products=>{
-            res.render('shop/products',
-                {
-                    title:'Products',
-                    products:products,
-                    categories:model.categories,
-                    selectedcategory:categoryid,
-                    path:'/products'
-                });
+        .then(products => {
+            res.render('shop/products', {
+                title: 'Products',
+                products: products,
+                categories: model.categories,
+                selectedcategory: categoryid,
+                selectedcategoryname: model.selectedcategoryname, // selectedcategoryname'i render edilecek veriler arasına ekleyin
+                path: '/products'
+            });
         })
-        .catch((err)=>{
+        .catch((err) => {
             console.log(err);
-        })
+        });
 }
+
 
 
 exports.getProduct=(req,res)=> {
@@ -352,7 +360,7 @@ exports.postPayment = async (req, res, next) => {
                 const lastOrder = infos[infos.length - 1];
                 // lastOrder.set('orderIdNumber', String(orderIdNumber));
                 lastOrder.update({ orderIdNumber: String(orderIdNumber) }).then(() => {
-                    res.redirect('/payment-success');
+                    res.redirect('/');
                 }).catch(err => {
                     console.error("orderIdNumber güncellenirken bir hata oluştu:", err);
                 });
@@ -380,28 +388,17 @@ exports.getPaymentSuccess=(req,res,next)=>{
     })
 }
 
+exports.getFAQ=(req,res,next)=>{
+    FAQ.findAll()
+        .then(faqs=>{
+            res.render('shop/faq',{
+                title:'Sıkça Sorulan Sorular',
+                path:'/sikca-sorulan-sorular',
+                faqs:faqs
+            })
+        }).catch(err=>{
+            console.log(err);
+        })
 
-// exports.postOrder = async (req, res, next) => {
-//     try {
-//         let userCart;
-//         const cart = await req.user.getCart();
-//         userCart = cart;
-//         const products = await cart.getProducts();
-        
-//         const order = await req.user.createOrder();
-//         await order.addProducts(products.map(product => {
-//             product.orderItem = {
-//                 quantity: product.cartItem.quantity,
-//                 price: product.price
-//             }
-//             return product;
-//         }));
-
-//         await userCart.setProducts(null);
-        
-//         // postCheckout metodunu çağırarak yönlendirme yapılıyor
-//         await postCheckout(req, res, next);
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
+    
+}

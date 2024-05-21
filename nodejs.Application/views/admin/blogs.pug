@@ -19,7 +19,7 @@ block content
                             td 
                                 img(src=`/img/${blog.image}` width='80')
                             td #{blog.title}
-                            td #{blog.description}
+                            td !{blog.description}
                             td.d-flex 
                                 a.btn.btn-primary.btn-sm(href=`/admin/edit-blog/${blog.id}`) Edit
                                 form(action='/admin/delete-blog' method='POST')

@@ -20,27 +20,27 @@ block content
                 //-         h1 THERE ARE NO PRODUCT
         section.face-problem-categories-section
             .face-problem-categories-container
-                a.problem-item
+                a.problem-item(href="/categories/1")
                     .problem-box
                         .problem-image
-                            img(src="/img/phonecat.webp", alt="")
+                                img(src="/img/phonecat.webp", alt="")
                         label.problem-title Telefon
-                a.problem-item
-                    .problem-box
-                        .problem-image
-                            img(src="/img/poltio_camasir_mak.webp", alt="")
-                        label.problem-title Çaşamaşır Makinesi
-                a.problem-item
+                //- a.problem-item
+                //-     .problem-box
+                //-         .problem-image
+                //-             img(src="/img/poltio_camasir_mak.webp", alt="")
+                //-         label.problem-title Çaşamaşır Makinesi
+                a.problem-item(href="/categories/2")
                     .problem-box
                         .problem-image
                             img(src="/img/notebookcat.webp", alt="")
                         label.problem-title Notebook
-                a.problem-item
+                a.problem-item(href="/categories/3")
                     .problem-box
                         .problem-image
                             img(src="/img/poltio_foto_mak.webp", alt="")
                         label.problem-title Fotoğraf Makinesi
-                a.problem-item
+                a.problem-item(href="/categories/4")
                     .problem-box
                         .problem-image
                             img(src="/img/poltio_saat.webp", alt="")
@@ -51,18 +51,63 @@ block content
                 .row
                     .col-12
                         .product-section-title
-                            h2.title Telefon
-                            .product-section-box
-                                p.product-p-title.product-section-box-active Telefon
-                                p.product-p-title Notebook
-                                p.product-p-title Fotoğraf Makinesi
-                                p.product-p-title Giyilebilir Teknoloji
-                .row.mb-n4.mb-sm-n10.g-3.g-sm-6.product-append
-                    if products.length > 0
-                        each product in products 
-                            +createProduct(product)
-                    else 
-                        h1 THERE ARE NO PRODUCT
+                            ul.nav.nav-pills#myTab(role="tablist")
+                                li.nav-item
+                                    a.nav-link.active(id="phone-tab-tab", data-toggle="tab", href="#phone-tab", role="tab", aria-controls="phone-tab", aria-selected="true") Telefon
+                                li.nav-item
+                                    a.nav-link(id="notebook-tab-tab", data-toggle="tab", href="#notebook-tab", role="tab", aria-controls="notebook-tab", aria-selected="true") Notebook
+                                li.nav-item
+                                    a.nav-link(id="photo-tab-tab", data-toggle="tab", href="#photo-tab", role="tab", aria-controls="photo-tab", aria-selected="true") Fotoğraf Makinesi
+                                li.nav-item
+                                    a.nav-link(id="wearable-tab-tab", data-toggle="tab", href="#wearable-tab", role="tab", aria-controls="wearable-tab", aria-selected="true") Giyilebilir Teknoloji
+                        .tab-content
+                            .tab-content#myTabContent
+                                .tab-pane.fade.show.active(id="phone-tab", role="tabpanel", aria-labelledby="phone-tab-tab")
+                                    .row.mb-n4.mb-sm-n10.g-3.g-sm-6.product-append
+                                        if products.length > 0
+                                            each product in products 
+                                                if(product.categoryId==1)
+                                                    +createProduct(product)
+                                                
+                                        
+                                .tab-pane.fade.show.active(id="notebook-tab", role="tabpanel", aria-labelledby="notebook-tab-tab") 
+                                    .row.mb-n4.mb-sm-n10.g-3.g-sm-6.product-append
+                                        if products.length > 0
+                                            each product in products 
+                                                if(product.categoryId==2)
+                                                    +createProduct(product)
+                                                
+                                        
+                                .tab-pane.fade.show.active(id="photo-tab", role="tabpanel", aria-labelledby="photo-tab-tab") 
+                                    .row.mb-n4.mb-sm-n10.g-3.g-sm-6.product-append
+                                        if products.length > 0
+                                            each product in products 
+                                                if(product.categoryId==3)
+                                                    +createProduct(product)
+                                                
+                                        
+                                .tab-pane.fade.show.active(id="wearable-tab", role="tabpanel", aria-labelledby="wearable-tab-tab") 
+                                    .row.mb-n4.mb-sm-n10.g-3.g-sm-6.product-append
+                                        if products.length > 0
+                                            each product in products 
+                                                if(product.categoryId==4)
+                                                    +createProduct(product)
+                                                
+                                        
+                        
+
+
+
+
+                            
+
+
+                        //- .row.mb-n4.mb-sm-n10.g-3.g-sm-6.product-append
+                        //-     if products.length > 0
+                        //-         each product in products 
+                        //-             +createProduct(product)
+                        //-     else 
+                        //-         h1 THERE ARE NO PRODUCT
 
         section.section-space.p-top-bot-70            
             h2.text-center.pb-3 BLOGS

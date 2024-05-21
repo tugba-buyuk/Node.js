@@ -1,0 +1,20 @@
+extends ../layouts/admin-layout.pug
+
+block content 
+    form(action="/admin/add-faq" method="POST").d-flex.flex-column
+        input(type='hidden' name='_csrf' value=`${csrfToken}`)
+        .form-group.d-flex.flex-row
+            label(for="question").col-sm-2.col-form-label Question
+            .col-sm-5.pr-0
+                input(type="text" id="question" name="question").form-control
+        
+        .form-group.d-flex.flex-row
+            label(for="answer").col-sm-2.col-form-label Answer
+            .col-sm-5.pr-0
+                input(type="text" id="answer" name="answer").form-control
+
+        .form-group.d-flex.flex-row
+            .col-sm-5.offset-sm-2 
+                input(type="submit" value="Add New Category").btn.btn-primary
+
+

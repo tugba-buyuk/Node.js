@@ -1,0 +1,27 @@
+extends ../layouts/admin-layout.pug
+
+block content
+    if (action !== 'undefined' && action === 'edit')
+            div.alert.alert-success The faq has been updated!
+    if (action !== 'undefined' && action === 'delete')
+        div.alert.alert-danger The faq has been deleted!
+    div(style='padding-right:35px') 
+        if faqs.length>0
+            table.table.table-bordered 
+                thead 
+                    tr 
+                        th Question 
+                        th Answer 
+                tbody 
+                    each faq in faqs 
+                        tr 
+                            td #{faq.question}
+                            td #{faq.answer}
+                            td 
+                                a.btn.btn-primary.btn-sm(href=`/admin/edit-faq/${faq.id}`) Edit
+                                form(action='/admin/delete-faq' method='POST')
+                                    input(type='hidden' name='_csrf' value=`${csrfToken}`)
+                                    input(type='hidden' name='faqid' value=`${faq.id}`)
+                                    button(type='submit').btn.btn-danger.btn-sm.ml-2 Delete
+
+    a.btn.btn-primary.btn-sm(href='/admin/add-faq') Yeni Soru Ekle

@@ -34,7 +34,7 @@ const Order=require('./models/order');
 const OrderItem=require('./models/orderitem');
 const OrderInfo=require('./models/orderInfo');
 const City=require('./models/city');
-
+const FAQ=require('./models/faq');
 
 
 
@@ -120,39 +120,34 @@ Product.belongsToMany(Order,{through:OrderItem});
 
 
 
-let _user;
-sequelize
-// .sync({force:true})
-.sync()
-.then(() => {
-    // Tüm kullanıcıları getir
-    User.findAll()
-        .then(users => {
-            // Her bir kullanıcı için işlemleri gerçekleştir
-            users.forEach(user => {
-                user.getCart()
-                    .then(cart => {
-                        if (!cart) {
-                            return user.createCart();
-                        }
-                        return cart;
-                    })
-                    .then(() => {
-                        // Kullanıcının orders tablosunda siparişleri olup olmadığını kontrol et
-                        return user.countOrders();
-                    })
-                    .then(orderCount => {
-                        if (orderCount === 0) {
-                            // Eğer sipariş yoksa örnek siparişler oluştur
-                            return user.createOrder();
-                        }
-                    })
-            });
-        });
-})
-.catch((err)=>{
-    console.log(err);
-});
+async function main() {
+    let _user;
+    try {
+        // await sequelize.sync({force:true});
+        await sequelize.sync();
+        const users = await User.findAll();
+
+        for (const user of users) {
+            try {
+                let cart = await user.getCart();
+                if (!cart) {
+                    await user.createCart();
+                }
+
+                const orderCount = await user.countOrders();
+                if (orderCount === 0) {
+                    await user.createOrder();
+                }
+            } catch (error) {
+                console.log("Kullanıcı işlemleri sırasında bir hata oluştu:", error);
+            }
+        }
+    } catch (error) {
+        console.log("Veritabanı senkronizasyonu sırasında bir hata oluştu:", error);
+    }
+}
+
+main();
 
 app.listen(3000 , ()=>{
     console.log('listening on port 3000');

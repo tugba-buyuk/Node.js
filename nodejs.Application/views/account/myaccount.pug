@@ -1,7 +1,7 @@
 extends ../layouts/main-layout.pug
 
 block content
-    .container
+    .container(style="padding-top:100px")
       .row
         .col-md-3
           ul.nav.flex-column.nav-pills#myTab(role="tablist").account-nav
@@ -25,23 +25,49 @@ block content
 
                         .profile-form-group-container
                             label.input-title Adı*
-                            input.form-input.profile-input.p-1(type='text' id='name' name='Name' value='Tuğba')
-                        .profile-form-group-container
-                            label.input-title Soyadı*
-                            input.form-input.profile-input.p-1(type='text' id='surname' name='Surname' value='Büyük')
+                            input.form-input.profile-input.p-1(type='text' id='name' name='Name' value=`${user.name}`)
                         .profile-form-group-container
                             label.input-title E-posta*
-                            input.form-input.profile-input.p-1(type='text' id='Email' name='Email' value='tugba.buyuk@std.yildiz.edu.tr')
-                        .profile-form-group-container
-                            label.input-title Cep Telefonu*
-                            input.form-input.profile-input.p-1(type='text' id='phone' name='Phone' value='5344065963')
-                        p#email-error.d-none.text-center Bu Email daha önceden kayıtlı!
+                            input.form-input.profile-input.p-1(type='text' id='Email' name='Email' value=`${user.email}`)
                         .profile-btn-container
                             a.profile-btn.editUser-btn Kaydet
 
             .tab-pane.fade(id="orders-tab", role="tabpanel", aria-labelledby="orders-tab-tab")
-              h3 Tab 2 Content
-              p This is the content of Tab 2.
+              h3 Siparişlerim
+              if orders.length > 0 
+                each order in orders
+                    .card.mb-5
+                        .card-header
+                            h3 order id: ##{order.id}
+                        table.table
+                            thead
+                                tr
+                                    th Image
+                                    th Product Name
+                                    th Price
+                                    th Quantity
+                                    th Detail
+
+                            tbody
+                                each product in order.products
+                                    tr
+                                        td
+                                            img(src=`/img/${product.image}` width="80")
+                                        td #{product.name}
+                                        td #{product.orderItem.price}
+                                        td #{product.orderItem.quantity}
+                                        td 
+                                            a.btn.btn-primary.btn-sm(href=`/account/order/${order.id}`) Ayrıntı
+                            tfoot
+                                tr
+                                    td(colspan="2") #{order.createdAt.toDateString()}
+                                    td
+                                    - var total = 0;
+                                    each product in order.products
+                                        - total += (product.price * product.orderItem.quantity)
+                                    td  #{total} TL
+                      
+
             .tab-pane.fade(id="addres-tab", role="tabpanel", aria-labelledby="addres-tab-tab")
                 .profile-form-container
                     .profile-addres-container

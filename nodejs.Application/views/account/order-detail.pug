@@ -1,0 +1,35 @@
+extends ../layouts/main-layout.pug
+
+block content
+    .container(style="padding-top:100px")
+        table.table
+            thead
+                tr
+                    th Image
+                    th Product Name
+                    th Price
+                    th Quantity
+                    th Client Name
+                    th Client Surname
+                    th Client Email
+                    th Client Phone
+                    th Client City
+                    th Client District 
+                    th Client Adress
+
+            tbody
+                each product in order.products
+                    tr
+                        td
+                            img(src=`/img/${product.image}` width="80")
+                        td #{product.name}
+                        td #{product.orderItem.price}
+                        td #{product.orderItem.quantity}
+                        td #{info.orderUserName}
+                        td #{info.orderUserSurname}
+                        td #{info.orderUserEmail}
+                        td #{info.orderUserPhone}
+                        td #{info.orderUserCity}
+                        td #{info.orderUserDistrict}
+                        td #{info.orderUserFullAdress}
+        a.btn.btn-primary(href="/account") Geri

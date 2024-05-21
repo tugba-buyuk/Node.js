@@ -3,14 +3,17 @@ extends ../layouts/main-layout.pug
 include ../mixins/createProduct.pug
 
 block content
-    .row
-        .col-md-3
-            include ../includes/menu.pug
+    .container(style="padding-top:100px")
+        .row
+            //- .col-md-3
+            //-     //- include ../includes/menu.pug
 
-        .col-md-9
-            div(style="padding-top: 50px;").row
-                if products.length > 0
-                    each product in products 
-                        +createProduct(product)
-                else 
-                    h1 THERE ARE NO PRODUCT
+            .col-md-12
+                div(style="padding-top: 50px;").d-flex.flex-column
+                    h2 #{selectedcategoryname}
+                    .row.mb-n4.mb-sm-n10.g-3.g-sm-6.product-append
+                        if products.length > 0
+                            each product in products 
+                                +createProduct(product)
+                        else 
+                            h1 THERE ARE NO PRODUCT

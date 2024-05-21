@@ -8,6 +8,7 @@ const fs=require('fs');
 const bcrypt=require('bcrypt')
 const OrderInfo=require('../models/orderInfo');
 const Order=require('../models/order');
+const FAQ=require('../models/faq');
 
 exports.getProducts=(req,res)=> {
     Product.findAll()
@@ -492,4 +493,99 @@ exports.getOrder = async (req, res, next) => {
         console.log(err);
         res.status(500).send('An error occurred');
     }
+}
+
+exports.getFAQS = async (req, res, next) => {
+    try {
+        const faqs = await FAQ.findAll();
+        // Further processing or sending response
+        res.render('admin/faqs',{
+            title:'FAQS',
+            path:'/admin/faqs',
+            faqs:faqs
+        })
+    } catch (error) {
+        // Handle errors
+        console.error("Error fetching categories:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+exports.getAddFAQ=(req,res,next)=>{
+    res.render('admin/add-faq',{
+        title:'Add Faq Page',
+        path:'/admin/add-faq'
+    })
+}
+
+exports.postAddFAQ=(req,res,next)=>{
+    const FaqQuestion=req.body.question;
+    const FaqAnswer=req.body.answer;
+
+    FAQ.create({
+        question:FaqQuestion,
+        answer:FaqAnswer,
+    }).then((result)=>{
+        console.log(result);
+        res.redirect('/admin/faqs');
+    }).catch((err)=>{
+        console.log(err);
+    });
+
+}
+
+exports.postDeleteFaq=(req,res,next)=>{
+    const id=req.body.faqid;
+    FAQ.findByPk(id).then((faq)=>{
+        return faq.destroy();
+    })
+    .then(()=>{
+        res.redirect('/admin/faqs?action=delete');
+    })
+    .catch((err)=>{
+        console.log(err);
+    });
+    
+}
+
+exports.getEditFaq=(req,res,next)=>{
+    const faqId= req.params.faqid;
+    FAQ.findByPk(faqId)
+        .then(faq=>{
+            res.render('admin/edit-faq',
+            {
+                title:'Edit FAQ',
+                faq:faq,
+                path:'/admin/edit-faq',
+            }); 
+        }).catch(err=>{
+            console.log(err);
+        })
+      
+}
+
+exports.postEditFaq = (req, res, next) => {
+    const id=req.body.id;
+    const question = req.body.question;
+    const answer = req.body.answer;
+
+    const edittedFAQ = {
+        id,
+        question,
+        answer,
+      };
+
+      FAQ.findByPk(id)
+      .then(async (faq) => {
+       
+        return faq.update(edittedFAQ); 
+      })
+      .then(() => {
+        res.redirect('/admin/faqs?action=edit');
+      })
+      .catch((err) => {
+        console.error(err);
+        
+      });
+   
 }

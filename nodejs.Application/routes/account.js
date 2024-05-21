@@ -21,4 +21,6 @@ router.post('/new-password',locals,accountController.postNewPassword);
 
 router.get('/account',locals,isAuthenticated,accountController.getAccount);
 
+router.get('/account/order/:orderid',locals,isAuthenticated,accountController.getOrder)
+
 module.exports=router;

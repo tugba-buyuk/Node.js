@@ -1,9 +1,10 @@
 extends ../layouts/main-layout.pug
 
 block content
-    h1.text-center IMAGE GALLERY DESIGN 
-    .gallery 
-        each photo in photos
-            a(href=`/img/${photo.image}` data-lightbox='mygallery') 
-                img(src=`/img/${photo.image}` data-lightbox='mygallery').gallery-img
-            
+    .container(style="padding-top:100px")
+        h1.text-center IMAGE GALLERY DESIGN 
+        .gallery 
+            each photo in photos
+                a(href=`/img/${photo.image}` data-lightbox='mygallery') 
+                    img(src=`/img/${photo.image}` data-lightbox='mygallery').gallery-img
+                

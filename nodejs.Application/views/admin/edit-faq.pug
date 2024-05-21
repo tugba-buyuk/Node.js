@@ -1,0 +1,19 @@
+extends ../layouts/admin-layout.pug
+
+block content 
+    form(action="/admin/edit-faq" method="POST").d-flex.flex-column
+
+        input(type='hidden' name='_csrf' value=`${csrfToken}`)
+        input(type='hidden' value=`${faq.id}` name='id')
+        .form-group.d-flex.flex-row
+            label(for="question").col-sm-2.col-form-label Question
+            .col-sm-5
+                input(type="text" id="question" name="question" value=`${faq.question}`).form-control
+        .form-group.d-flex.flex-row
+            label(for="answer").col-sm-2.col-form-label Answer
+            .col-sm-5
+                input(type="text" id="answer" name="answer" value=`${faq.answer}`).form-control
+
+        .form-group.d-flex.flex-row
+            .col-sm-5.offset-sm-2 
+                input(type="submit" value="Save").btn.btn-primary

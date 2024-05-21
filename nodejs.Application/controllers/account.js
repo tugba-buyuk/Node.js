@@ -2,6 +2,8 @@ const User=require('../models/user');
 const bcrypt=require('bcrypt')
 const nodemailer=require('nodemailer');
 const crypto=require('crypto');
+const Order=require('../models/order');
+const OrderInfo=require('../models/orderInfo');
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -260,10 +262,48 @@ exports.getLogout=(req,res,next)=>{
        
 }
 
-exports.getAccount=(req,res,next)=>{
-  res.render('account/myaccount',{
-    title:'Account',
-    path:'/account'
-  })
-     
+exports.getAccount = (req, res, next) => {
+  req.user
+      .getOrders({include:['products']})
+      .then(orders=>{
+          res.render('account/myaccount',
+          {
+              title:'Account',
+              path:'/account',
+              orders:orders,
+              user:req.user
+          });
+      })
+      .catch(err=>{
+          console.log(err);
+      })
+  
+};
+
+exports.getOrder = async (req, res, next) => {
+    const orderId = req.params.orderid;
+
+    try {
+        const order = await Order.findByPk(orderId, { include: 'products' }); // Include products when fetching order
+
+        if (!order) {
+            throw new Error('Order not found');
+        }
+
+        const info = await OrderInfo.findOne({ where: { orderIdNumber: orderId } });
+
+        if (!info) {
+            throw new Error('Order info not found');
+        }
+
+        res.render('account/order-detail', {
+            title: "Order Detail",
+            path: 'account/order-detail',
+            order: order,
+            info: info
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('An error occurred');
+    }
 }

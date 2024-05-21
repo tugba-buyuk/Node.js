@@ -1,13 +1,13 @@
 extends ../layouts/main-layout.pug
 
 block content
-    .container.blog-detail-container
+    .container.blog-detail-container(style="padding-top:100px")
         .project-detail-inside
             .project-detail-inside-left(style="width:70%")
                 p.project-detail-title.mt-0 #{blog.title}
                 .project-detail-inside-left-img
                     img(src=`/img/${blog.image}`).project-detail-img
-                p.blog-detail-desc #{blog.description}
+                p.blog-detail-desc !{blog.description}
             .project-detail-inside-right
                 .project-detail-right-title-div
                     .project-detail-right-title İLGİLİ YAZILAR 

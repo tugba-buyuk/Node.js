@@ -41,5 +41,7 @@ router.get('/blog/:blogid',locals,shopController.getBlog);
 
 router.get('/gallery',shopController.getGallery);
 
+router.get('/sikca-sorulan-sorular',shopController.getFAQ);
+
 
 module.exports=router;

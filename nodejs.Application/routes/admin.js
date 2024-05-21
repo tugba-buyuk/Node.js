@@ -56,6 +56,18 @@ const locals=require('../middlewares/locals');
  router.get('/orders',locals,adminController.getOrders);
 
 router.get('/order/:orderid',adminController.getOrder);
+
+router.get('/faqs',locals,isAdmin,adminController.getFAQS);
+
+router.get('/add-faq',locals,isAdmin,adminController.getAddFAQ);
+
+router.post('/add-faq',locals,adminController.postAddFAQ);
+
+router.post('/delete-faq',locals,isAdmin,adminController.postDeleteFaq);
+
+router.get('/edit-category/:faqid',locals,isAdmin,adminController.getEditFaq);
+
+router.post('/edit-faq',locals,adminController.postEditFaq);
  
 
  
